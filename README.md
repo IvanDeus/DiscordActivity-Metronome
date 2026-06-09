@@ -22,7 +22,6 @@ A simple metronome app that runs inside **Discord Voice Channels** as an embedde
 ### 💻 Local Development Tools
 
 - Python 3.8+
-- gunicorn
 - Flask
 - requests
 - psutil
