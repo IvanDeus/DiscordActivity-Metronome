@@ -5,6 +5,7 @@ from app_cfg import DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DEBUG, APP_LPORT, 
 import json
 import sqlite3
 import os
+import sys
 import requests
 
 app = Flask(__name__)
