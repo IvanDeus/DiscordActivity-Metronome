@@ -147,5 +147,5 @@ if __name__ == '__main__':
     if not os.path.exists(DATABASE):
         with app.app_context():
             init_db()
-    logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s: %(message)s')
+    logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s: %(message)s',handlers=[logging.StreamHandler(sys.stdout)])
     app.run(host='127.0.0.1', port=APP_LPORT, debug=DEBUG)
