@@ -1,6 +1,7 @@
+### app.py Metronome
 import logging
 import traceback
-from flask import Flask, render_template, request, jsonify, g
+from flask import Flask, render_template, request, jsonify, g, send_from_directory
 from app_cfg import DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DEBUG, APP_LPORT, LOGFPATH, DATABASE
 import json
 import sqlite3
@@ -33,6 +34,11 @@ def init_db():
 @app.route('/')
 def index():
     return render_template('index.html', client_id=DISCORD_CLIENT_ID)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/api/token', methods=['POST'])
 def get_discord_token():
@@ -74,6 +80,7 @@ def get_discord_token():
             global_name = user_data.get('global_name', '')
             avatar = user_data.get('avatar', '')
             locale = user_data.get('locale', 'en')
+            email = user_data.get('email', '')
 
             db = get_db()
             cur = db.cursor()
@@ -82,15 +89,15 @@ def get_discord_token():
             if not existing_user:
                 cur.execute("""
                     INSERT INTO discord_users (
-                        user_id, username, global_name, avatar, locale, bpm
-                    ) VALUES (?, ?, ?, ?, ?, ?)
-                """, (user_id, username, global_name, avatar, locale, 90))
+                        user_id, username, global_name, avatar, locale, email, bpm
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (user_id, username, global_name, avatar, locale, email, 90))
             else:
                 cur.execute("""
                     UPDATE discord_users SET
-                        username = ?, global_name = ?, avatar = ?
+                        username = ?, global_name = ?, avatar = ?, email = ?
                     WHERE user_id = ?
-                """, (username, global_name, avatar, user_id))
+                """, (username, global_name, avatar, email, user_id))
             db.commit()
 
         # Send token back to client so they can authenticate the embedded SDK
