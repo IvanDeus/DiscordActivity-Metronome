@@ -132,23 +132,7 @@ function sendUserPrefs() {
         xhr.send(formData);
     }
 }
-// --- Load metr.html via AJAX ---
-function loadMetronomeHTML(callback) {
-    fetch('static/html/metr.html')
-        .then(response => {
-            if (!response.ok) throw new Error("Failed to load metr.html");
-            return response.text();
-        })
-        .then(html => {
-            const appContainer = document.getElementById('app');
-            if (appContainer) {appContainer.innerHTML = html;}
-            if (callback) callback();
-        })
-        .catch(err => {
-            console.error("Error loading metr.html:", err);
-            showErrorMessage("Failed to load app interface.");
-        });
-}
+// Removed loadMetronomeHTML as the UI is now inline in index.html
 // --- DISCORD INIT FUNCTION ---
 import { DiscordSDK } from "https://esm.sh/@discord/embedded-app-sdk@1.2.0";
 
@@ -205,40 +189,43 @@ async function setupDiscordSDK() {
         prefsData = await userPrefsResponse.json();
     }
 
-    // Load HTML and setup UI
-    loadMetronomeHTML(() => {
-        currentBPM = prefsData.bpm || 90;
-        updateBPMDisplay();
-        updateBPMLevelIndicator();
+    // Setup UI and reveal the app
+    const appContainer = document.getElementById('app');
+    if (appContainer) {
+        appContainer.style.display = 'block';
+    }
 
-        const profilePic = document.getElementById('profile-pic');
-        if (profilePic) {
-            profilePic.style.backgroundImage = `url('${avatarUrl}')`;
+    currentBPM = prefsData.bpm || 90;
+    updateBPMDisplay();
+    updateBPMLevelIndicator();
+
+    const profilePic = document.getElementById('profile-pic');
+    if (profilePic) {
+        profilePic.style.backgroundImage = `url('${avatarUrl}')`;
+    }
+
+    const profileNameElement = document.getElementById("profile-name");
+    if (profileNameElement) {
+       profileNameElement.innerText = `[ ${globalName} ]`;
+    }
+
+    setupButtonHandlers();
+    setupBPMTouchControl();
+
+    // Hide loader
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.style.transition = 'opacity 0.5s ease-out';
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 500);
+    }
+
+    // --- Save preferences ---
+    setInterval(sendUserPrefs, 53000); // Every 53 seconds
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+            sendUserPrefs();
         }
-
-        const profileNameElement = document.getElementById("profile-name");
-        if (profileNameElement) {
-           profileNameElement.innerText = `[ ${globalName} ]`;
-        }
-
-        setupButtonHandlers();
-        setupBPMTouchControl();
-
-        // Hide loader
-        const loader = document.getElementById('loader');
-        if (loader) {
-            loader.style.transition = 'opacity 0.5s ease-out';
-            loader.style.opacity = '0';
-            setTimeout(() => loader.remove(), 500);
-        }
-
-        // --- Save preferences ---
-        setInterval(sendUserPrefs, 53000); // Every 53 seconds
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-                sendUserPrefs();
-            }
-        });
     });
 }
 
