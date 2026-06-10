@@ -32,7 +32,7 @@ def init_db():
 
 @app.route('/')
 def index():
-    return render_template('load.html')
+    return render_template('load.html', client_id=DISCORD_CLIENT_ID)
 
 @app.route('/api/token', methods=['POST'])
 def get_discord_token():
