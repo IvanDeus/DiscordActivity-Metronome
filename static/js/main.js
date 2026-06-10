@@ -149,7 +149,7 @@ function sendUserPrefs() {
 }
 
 // --- DISCORD INIT FUNCTION ---
-import { DiscordSDK } from "https://esm.sh/@discord/embedded-app-sdk@1.2.0";
+import { DiscordSDK } from "/static/js/discord-sdk.js";
 
 // Grab DISCORD_CLIENT_ID from the window object (injected in load.html)
 const DISCORD_CLIENT_ID = window.DISCORD_CLIENT_ID;
