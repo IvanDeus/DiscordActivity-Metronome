@@ -70,14 +70,7 @@ cp app_cfg.example.py app_cfg.py
 
 Edit `app_cfg.py` and add your actual data: `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET`.
 
-### Step 5: Configure App Frontend
-
-Open `static/js/main.js` and replace the placeholder client ID at the top of the file with your actual Discord Application's **Client ID**:
-```javascript
-const DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID';
-```
-
-### Step 6: 🏃🏻‍♂️ Run Your Metronome App
+### Step 5: 🏃🏻‍♂️ Run Your Metronome App
 
 To start the App in the background using **PM2**, run:
 
@@ -88,7 +81,7 @@ pm2 start app.py --name "discord-metronome" --interpreter python3
 This step will also automatically initialize the SQLite database (`users_db.sqlite`) if it doesn't exist.
 To view logs, run `pm2 logs discord-metronome`. To stop it, run `pm2 stop discord-metronome`.
 
-### Step 7: Expose App Publicly
+### Step 6: Expose App Publicly
 
 To test the app inside Discord, your application needs to be served over HTTPS. You can use Cloudflare Tunnels (recommended for quick testing):
 ```bash
@@ -113,7 +106,7 @@ server {
 }
 ```
 
-### Step 8: 🎉 Enjoy!
+### Step 7: 🎉 Enjoy!
 
 Hop into a Discord Voice Channel, launch your Activity, and start the metronome!
 
