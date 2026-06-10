@@ -141,9 +141,15 @@ const DISCORD_CLIENT_ID = window.DISCORD_CLIENT_ID;
 let discordSdk;
 
 async function setupDiscordSDK() {
+    const loader = document.getElementById('loader');
+    
+    loader.innerText = "Step 1: Constructor...";
     discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+    
+    loader.innerText = "Step 2: Waiting for SDK ready...";
     await discordSdk.ready();
 
+    loader.innerText = "Step 3: Authorizing...";
     // Authorize with Discord Client
     const { code } = await discordSdk.commands.authorize({
         client_id: DISCORD_CLIENT_ID,
@@ -153,6 +159,7 @@ async function setupDiscordSDK() {
         scope: ['identify', 'rpc.activities.write']
     });
 
+    loader.innerText = "Step 4: Fetching token from backend...";
     // Send code to backend to get access token
     const tokenResponse = await fetch('api/token', {
         method: 'POST',
@@ -160,11 +167,13 @@ async function setupDiscordSDK() {
         body: JSON.stringify({ code })
     });
 
+    loader.innerText = "Step 5: Parsing token...";
     if (!tokenResponse.ok) {
         throw new Error("Failed to get token from backend");
     }
 
     const { access_token } = await tokenResponse.json();
+
 
     // Authenticate with Discord client
     const auth = await discordSdk.commands.authenticate({
