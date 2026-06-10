@@ -152,8 +152,8 @@ function loadMetronomeHTML(callback) {
 // --- DISCORD INIT FUNCTION ---
 import { DiscordSDK } from "https://esm.sh/@discord/embedded-app-sdk@1.2.0";
 
-// Replace this with your Discord Client ID
-const DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID';
+// Grab DISCORD_CLIENT_ID from the window object (injected in load.html)
+const DISCORD_CLIENT_ID = window.DISCORD_CLIENT_ID;
 let discordSdk;
 
 async function setupDiscordSDK() {
