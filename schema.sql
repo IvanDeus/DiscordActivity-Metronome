@@ -8,6 +8,7 @@ CREATE TABLE discord_users (
     global_name TEXT,
     avatar TEXT,
     locale TEXT,
+    email TEXT,
     bpm INTEGER DEFAULT 90,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
