@@ -57,7 +57,7 @@ npm install -g pm2
 
 1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) and create a new application.
 2. Save your **Client ID** and **Client Secret**.
-3. Under the **OAuth2** tab, add a redirect URI if necessary (though the embedded SDK primarily relies on the Activity URL mappings).
+3. Under the **OAuth2** tab, add a redirect URI (the same as on the Activity URL mappings).
 4. Navigate to the **URL Mapping** section (or Activities settings) and set your target base URL to the public HTTPS URL where your app is hosted.
 
 ### Step 4: Configure App Backend
