@@ -1,4 +1,4 @@
-// main.js
+// main.js Metronome
 let audioContext = null;
 let currentBPM = 90;
 let isPlaying = false;
@@ -177,7 +177,7 @@ clearTimeout(readyTimeout);
         response_type: 'code',
         state: '',
         prompt: 'none',
-        scope: ['identify']
+        scope: ['identify', 'email']
     });
 
     loader.innerText = "Step 4: Fetching token from backend...";
@@ -311,4 +311,3 @@ setupDiscordSDK().catch(error => {
     const errorMsg = error?.message || error?.code || JSON.stringify(error);
     showErrorMessage(`Init failed: ${errorMsg}. Check browser console for details.`);
 });
-
