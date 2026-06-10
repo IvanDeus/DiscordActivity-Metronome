@@ -41,7 +41,7 @@ function playClick() {
 }
 
 function startMetronome() {
-    // Clear any existing interval to prevent multiple metronomes playing
+    // Clear any existing interval 
     if (metronomeIntervalId) {
         clearInterval(metronomeIntervalId);
     }
@@ -67,7 +67,6 @@ function updateBPMDisplay() {
     }
 }
 // Function to handle touch/drag on the BPM line
-// Update the BPM level indicator position
 function updateBPMLevelIndicator() {
     const bpmLevel = document.querySelector('.bpm-level');
     if (bpmLevel) {
@@ -92,7 +91,7 @@ function setupBPMTouchControl() {
 
     function handleStart(e) {
         isDragging = true;
-        handleMove(e); // Update position immediately on start
+        handleMove(e);
         e.preventDefault();
     }
 
@@ -104,7 +103,7 @@ function setupBPMTouchControl() {
             if (newBPM !== currentBPM) {
                 currentBPM = newBPM;
                 updateBPMDisplay();
-                updateBPMLevelIndicator(); // Update visual position
+                updateBPMLevelIndicator();
                 if (isPlaying) {
                     startMetronome();
                 }
@@ -161,9 +160,16 @@ async function setupDiscordSDK() {
     loader.innerText = "Step 1: Constructor...";
     discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
     
-    loader.innerText = "Step 2: Waiting for SDK ready...";
-    await discordSdk.ready();
+loader.innerText = "Step 2: Waiting for SDK ready...";
+const readyTimeout = setTimeout(() => {
+    if (!discordSdk) {
+        throw new Error("SDK ready timeout. Not running in Discord?");
+    }
+}, 2000);
 
+await discordSdk.ready();
+clearTimeout(readyTimeout);
+    
     loader.innerText = "Step 3: Authorizing...";
     // Authorize with Discord Client
     const { code } = await discordSdk.commands.authorize({
@@ -171,7 +177,7 @@ async function setupDiscordSDK() {
         response_type: 'code',
         state: '',
         prompt: 'none',
-        scope: ['identify', 'rpc.activities.write']
+        scope: ['identify']
     });
 
     loader.innerText = "Step 4: Fetching token from backend...";
@@ -189,7 +195,6 @@ async function setupDiscordSDK() {
 
     const { access_token } = await tokenResponse.json();
 
-
     // Authenticate with Discord client
     const auth = await discordSdk.commands.authenticate({
         access_token
@@ -201,7 +206,7 @@ async function setupDiscordSDK() {
 
     userId = auth.user.id;
     const globalName = auth.user.global_name || auth.user.username;
-    let avatarUrl = "static/favicon.ico";
+    let avatarUrl = "/static/favicon.ico";
     if (auth.user.avatar) {
         avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${auth.user.avatar}.png`;
     }
@@ -302,6 +307,8 @@ document.addEventListener('contextmenu', function (e) {
 
 // Start SDK
 setupDiscordSDK().catch(error => {
-    console.error('Init failed:', error);
-    showErrorMessage("Failed to initialize Discord Activity. Make sure you are running inside Discord.");
+    console.error('Discord SDK Init Failed:', error);
+    const errorMsg = error?.message || error?.code || JSON.stringify(error);
+    showErrorMessage(`Init failed: ${errorMsg}. Check browser console for details.`);
 });
+
