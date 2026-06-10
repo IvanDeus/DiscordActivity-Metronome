@@ -130,27 +130,24 @@ function setupBPMTouchControl() {
 
 // Send user preferences to the server
 function sendUserPrefs() {
-    if (userId === null) {
-        console.warn("User ID not available. Cannot save preferences.");
-        return;
-    }
+    if (userId === null) return;
+    
     const formData = new URLSearchParams();
     formData.append('user_id', userId);
     formData.append('bpm', currentBPM);
-    //console.log("Sending preferences:", formData.toString());
+
     if (navigator.sendBeacon) {
-        const success = navigator.sendBeacon('update_user_prefs', formData);
-        if (!success) {
-            console.warn("Failed to send beacon");
-        }
+        navigator.sendBeacon('update_user_prefs', formData);
     } else {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'update_user_prefs', false);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send(formData);
+        // Async fetch fallback (non-blocking)
+        fetch('update_user_prefs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formData
+        }).catch(err => console.warn('Failed to save prefs:', err));
     }
 }
-// Removed loadMetronomeHTML as the UI is now inline in index.html
+
 // --- DISCORD INIT FUNCTION ---
 import { DiscordSDK } from "https://esm.sh/@discord/embedded-app-sdk@1.2.0";
 
@@ -240,7 +237,6 @@ async function setupDiscordSDK() {
     setupBPMTouchControl();
 
     // Hide loader
-    const loader = document.getElementById('loader');
     if (loader) {
         loader.style.transition = 'opacity 0.5s ease-out';
         loader.style.opacity = '0';
