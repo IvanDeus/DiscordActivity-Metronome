@@ -1,11 +1,29 @@
 // main.js
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let audioContext = null;
 let currentBPM = 90;
 let isPlaying = false;
 let metronomeIntervalId = null;
 let userId = null;
 
+function initAudioContext() {
+    if (!audioContext) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+        } else {
+            console.warn("Web Audio API not supported in this browser.");
+        }
+    }
+}
+
 function playClick() {
+    initAudioContext();
+    if (!audioContext) return;
+    
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+
     const now = audioContext.currentTime;
     const osc = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
