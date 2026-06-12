@@ -2,7 +2,7 @@
 import logging
 import traceback
 from flask import Flask, render_template, request, jsonify, g, send_from_directory
-from app_cfg import DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DEBUG, APP_LPORT, LOGFPATH, DATABASE
+from app_cfg import DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, DEBUG, APP_LPORT, DATABASE
 import json
 import sqlite3
 import os
