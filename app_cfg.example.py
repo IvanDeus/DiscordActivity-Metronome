@@ -4,9 +4,6 @@
 DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID'
 DISCORD_CLIENT_SECRET = 'YOUR_DISCORD_CLIENT_SECRET'
 
-# Logging settings
-LOGFPATH = "/var/log/DiscordActivity-Metronome.log"
-
 # DB name
 DATABASE = 'users_db.sqlite'
 
